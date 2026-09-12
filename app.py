@@ -4,12 +4,11 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 
 # 1. Настройка страницы
-st.set_page_config(page_title="BahodirGPT", page_icon="🤡", layout="centered")
+st.set_page_config(page_title="Custom Cloud AI", page_icon="🤖", layout="centered")
 
-# 2. Внедрение стильного CSS-дизайна (закругления, 3D-кнопки, тени)
+# 2. Внедрение стильного CSS-дизайна
 st.markdown("""
     <style>
-    /* Стиль для главного контейнера сообщений */
     .stChatMessage {
         border-radius: 16px !important;
         box-shadow: 0 4px 12px rgba(0,0,0,0.05);
@@ -17,37 +16,26 @@ st.markdown("""
         padding: 15px !important;
         border: 1px solid rgba(0,0,0,0.05);
     }
-    
-    /* Скругление углов для поля ввода */
     .stChatInput textarea {
         border-radius: 24px !important;
         border: 2px solid #e0e0e0 !important;
         padding: 12px 20px !important;
-        box-shadow: inset 0 2px 4px rgba(0,0,0,0.03) !important;
-        transition: all 0.3s ease;
     }
-    .stChatInput textarea:focus {
-        border-color: #10a37f !important;
-        box-shadow: 0 0 8px rgba(16,163,127,0.2) !important;
-    }
-
-    /* Эффект 3D-кнопки отправки */
     .stChatInput button {
         border-radius: 50% !important;
         background-color: #10a37f !important;
         color: white !important;
-        box-shadow: 0 4px #0d8265 !important; /* Объемная тень снизу */
-        transition: all 0.1s ease !important;
+        box-shadow: 0 4px #0d8265 !important;
     }
     .stChatInput button:active {
-        box-shadow: 0 1px #0d8265 !important; /* Кнопка уходит вниз при нажатии */
+        box-shadow: 0 1px #0d8265 !important;
         transform: translateY(3px) !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
-st.title("👻ОТСОСЁТ И ОТЛИЖЕТ🫶")
-st.write("Этот ИИ работает на мощных серверах в облаке, поэтому он отвечает,никагда!")
+st.title("🤖 Мой Премиум Вики-ИИ")
+st.write("Этот ИИ работает на мощных серверах в облаке, поэтому он отвечает мгновенно!")
 
 # 3. ЗАГРУЗКА МОДЕЛИ
 @st.cache_resource
@@ -76,7 +64,7 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# 6. Поле ввода
+# 6. Поле ввода и генерация
 if user_question := st.chat_input("Задайте вопрос вашему ИИ..."):
     with st.chat_message("user"):
         st.markdown(user_question)
@@ -87,15 +75,10 @@ if user_question := st.chat_input("Задайте вопрос вашему ИИ
             prompt = f"Context:\n{wiki_context}\n\nQuestion: {user_question}\nAnswer:"
             inputs = tokenizer(prompt, return_tensors="pt")
             
-            # Стало:
-outputs = model.generate(
-    **inputs, 
-    max_new_tokens=50,       # Уменьшаем длину до 50 слов, чтобы ответ вылетал пулей
-    do_sample=False         # Отключаем случайность — серверу не нужно тратить время на выбор синонимов
-)
-response = tokenizer.decode(outputs[0], skip_special_tokens=True) # Берем первый элемент из списка ответов
-clean_response = response.replace(prompt, "").strip()
-
+            # Быстрая генерация без do_sample
+            outputs = model.generate(**inputs, max_new_tokens=50, do_sample=False)
+            response = tokenizer.decode(outputs, skip_special_tokens=True)
+            clean_response = response.replace(prompt, "").strip()
             
             st.markdown(clean_response)
             
