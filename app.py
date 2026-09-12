@@ -87,9 +87,15 @@ if user_question := st.chat_input("Задайте вопрос вашему ИИ
             prompt = f"Context:\n{wiki_context}\n\nQuestion: {user_question}\nAnswer:"
             inputs = tokenizer(prompt, return_tensors="pt")
             
-            outputs = model.generate(**inputs, max_new_tokens=100, temperature=0.3, do_sample=True)
-            response = tokenizer.decode(outputs, skip_special_tokens=True)
-            clean_response = response.replace(prompt, "").strip()
+            # Стало:
+outputs = model.generate(
+    **inputs, 
+    max_new_tokens=50,       # Уменьшаем длину до 50 слов, чтобы ответ вылетал пулей
+    do_sample=False         # Отключаем случайность — серверу не нужно тратить время на выбор синонимов
+)
+response = tokenizer.decode(outputs[0], skip_special_tokens=True) # Берем первый элемент из списка ответов
+clean_response = response.replace(prompt, "").strip()
+
             
             st.markdown(clean_response)
             
