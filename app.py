@@ -83,3 +83,4 @@ if user_question := st.chat_input("Задайте вопрос вашему ИИ
             st.markdown(clean_response)
             
     st.session_state.messages.append({"role": "assistant", "content": clean_response})
+
