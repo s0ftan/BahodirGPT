@@ -71,24 +71,21 @@ if user_question := st.chat_input("Задайте вопрос вашему ИИ
     st.session_state.messages.append({"role": "user", "content": user_question})
 
     with st.chat_message("assistant"):
-               with st.spinner("ИИ думает..."):
+        with st.spinner("ИИ думает..."):
             prompt = f"Context:\n{wiki_context}\n\nQuestion: {user_question}\nAnswer:"
             inputs = tokenizer(prompt, return_tensors="pt")
             
             # Генерация ответа
             outputs = model.generate(**inputs, max_new_tokens=50, do_sample=False)
             
-            # Декодируем только саму сгенерированную последовательность (первую строку)
+            # Декодируем строго первую сгенерированную строку
             response = tokenizer.decode(outputs[0], skip_special_tokens=True)
             
-            # Жесткая проверка: если это список, берем первый элемент; если нет, преобразуем в строку
-            if isinstance(response, list):
-                response = str(response[0]) if response else ""
-            else:
-                response = str(response)
+            # Гарантируем, что результат — строка, и очищаем его от системной подсказки
+            response_str = str(response)
+            clean_response = response_str.replace(prompt, "").strip()
             
-            # Теперь .replace() сработает на 100% без ошибок
-            clean_response = response.replace(prompt, "").strip()
-            
+            # Финальный вывод на экран
             st.markdown(clean_response)
-
+            
+    st.session_state.messages.append({"role": "assistant", "content": clean_response})
