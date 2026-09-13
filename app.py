@@ -34,8 +34,8 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.title("What is the task for today?")
-st.write("Этот ИИ работает на мощных серверах в облаке, поэтому он отвечает мгновенно!")
+st.title("WHAT IS THE TASK TODAY?")
+st.write("The information data is quiete limited!")
 
 # 3. ЗАГРУЗКА МОДЕЛИ
 @st.cache_resource
