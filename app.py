@@ -4,7 +4,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 
 # 1. Настройка страницы
-st.set_page_config(page_title="Custom Cloud AI", page_icon="🤖", layout="centered")
+st.set_page_config(page_title="BahodirGPT", page_icon="🤖", layout="centered")
 
 # 2. Внедрение стильного CSS-дизайна
 st.markdown("""
@@ -34,7 +34,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.title("🤖 Мой Премиум Вики-ИИ")
+st.title("What is the task for today?")
 st.write("Этот ИИ работает на мощных серверах в облаке, поэтому он отвечает мгновенно!")
 
 # 3. ЗАГРУЗКА МОДЕЛИ
